@@ -8,6 +8,7 @@ By utilizing the random sampling method established by node2vec and modifying th
 
 ## Used Libraries
 - **networkx**: use networkx to represent and store the graph 
+- **gensim**: Gensim is a Python library for topic modelling, document indexing and similarity retrieval with large corpora; target audience is the natural language processing (NLP) and information retrieval (IR) community.
 
 ## Implementation Pipeline
 
