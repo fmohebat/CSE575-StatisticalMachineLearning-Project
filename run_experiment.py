@@ -20,6 +20,7 @@ from embedding.node2vec_embedding import Node2VecEmbedding
 from embedding.cbow_embedding import CBOWEmbedding
 from embedding.fast_text_embedding import FastTextEmbedding
 from embedding import embedding_utils
+from embedding.glove_embedding import GloveEmbedding
 
 
 def run_experiment():
@@ -43,7 +44,8 @@ def run_experiment():
     if not os.path.exists(emb_dir):
         os.mkdir(emb_dir)
     # Choose from ['GraphFactorization', 'HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding', 'node2vec', 'FastText']
-    model_to_run = ['HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding', 'node2vec', 'FastText', 'CBOW']
+    model_to_run = ['HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding', 'node2vec', 'FastText', 'CBOW', 'Glove']
+    #model_to_run = ['Glove']
     models = list()
 
     # Load the models you want to run
@@ -61,6 +63,8 @@ def run_experiment():
         models.append(get_fast_text_model(walks))
     if 'CBOW' in model_to_run:
         models.append(get_cbow_model(walks))
+    if 'Glove' in model_to_run:
+        models.append(get_glove_model(walks))
 
     # For each model, learn the embedding and evaluate on graph reconstruction and visualization
     print('\n\nStart learning embedding ...')
@@ -113,6 +117,16 @@ def get_cbow_model(walks):
     kwargs['n_workers'] = 8
     return CBOWEmbedding(d, **kwargs)
 
+def get_glove_model(walks):
+    kwargs = dict()
+    d = 2
+    kwargs['max_iter'] = 1
+    kwargs['walks'] = walks
+    kwargs['window_size'] = 10
+    kwargs['n_workers'] = 5
+    kwargs['learning_rate'] = 0.05
+    kwargs['num_threads'] = 4
+    return GloveEmbedding(d, **kwargs)
 
 def get_fast_text_model(walks):
     kwargs = dict()
