@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from time import time
 import networkx as nx
 import os
-
+import sys
 from gem.utils import graph_util, plot_util
 from gem.evaluation import visualize_embedding as viz
 from gem.evaluation import evaluate_graph_reconstruction as gr
@@ -22,11 +22,13 @@ from embedding.fast_text_embedding import FastTextEmbedding
 from embedding import embedding_utils
 
 
-def run_experiment():
+def run_embedding_experiment():
     print("start")
     # use random walk to sample from the graph
-    data_path = 'data/karate/karate.edgelist'
+    # data_path = 'data/karate/karate.edgelist'
+    data_path = 'data/' + sys.argv[1]
     is_directed = False
+    enable_visualization = False
 
     node2vec_random_walk_sampling = get_node2vec_random_walk_sampling(data_path, is_directed)
     sampled_graph, walks = node2vec_random_walk_sampling.get_sampled_graph()
@@ -39,9 +41,9 @@ def run_experiment():
     # we can also save the sampled graph and the walks to file at the end
 
     # generate embedding
-    emb_dir = 'output/'
+    emb_dir = 'output/' + sys.argv[1].split('.')[0]
     if not os.path.exists(emb_dir):
-        os.mkdir(emb_dir)
+        os.makedirs(emb_dir)
     # Choose from ['GraphFactorization', 'HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding', 'node2vec', 'FastText']
     model_to_run = ['HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding', 'node2vec', 'FastText', 'CBOW']
     models = list()
@@ -69,17 +71,23 @@ def run_experiment():
         t1 = time()
         # Learn embedding - accepts a networkx graph or file with edge list
         learned_embedding, t = embedding.learn_embedding(graph=sampled_graph, edge_f=None, is_weighted=True, no_python=True)
-        embedding_utils.save_embedding_to_file(learned_embedding, emb_dir+embedding.get_method_name()+'.emb')
+        embedding_utils.save_embedding_to_file(learned_embedding, emb_dir+'/'+embedding.get_method_name()+'.emb')
         print(embedding.get_method_name() + ':\n\tTraining time: %f' % (time() - t1))
         # Evaluate on graph reconstruction
+        print("\nEvaluating ...\n")
         MAP, prec_curv, err, err_baseline = gr.evaluateStaticGraphReconstruction(sampled_graph, embedding, learned_embedding, None)
         # ---------------------------------------------------------------------------------
         print(("\tMAP: {} \t precision curve: {}\n\n\n\n" + '-' * 100).format(MAP, prec_curv[:5]))
         # ---------------------------------------------------------------------------------
         # Visualize
-        viz.plot_embedding2D(embedding.get_embedding(), di_graph=sampled_graph, node_colors=None)
-        plt.show()
-        plt.clf()
+        
+        if enable_visualization:
+            print("\nVisualizing\n")
+            viz.plot_embedding2D(embedding.get_embedding(), di_graph=sampled_graph, node_colors=None)
+            plt.show()
+            plt.clf()
+        else:
+            print("\nVisualization Disabled\n")
 
 
 def get_node2vec_random_walk_sampling(data_path, is_directed):
@@ -97,7 +105,7 @@ def get_node2vec_random_walk_sampling(data_path, is_directed):
 
 def get_node2vec_model(walks):
     kwargs = dict()
-    d = 2
+    d = 2 #Why not change this to 128, as per the original node2vec paper
     kwargs['max_iter'] = 1
     kwargs['walks'] = walks
     kwargs['window_size'] = 10
@@ -126,4 +134,4 @@ def get_fast_text_model(walks):
 
 
 if __name__ == '__main__':
-    run_experiment()
+    run_embedding_experiment()
