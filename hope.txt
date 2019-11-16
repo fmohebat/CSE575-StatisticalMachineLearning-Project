@@ -1,0 +1,36 @@
+output/blog-catalog/blog-catalog_hope_gsvd.emb labels/blog-catalog-labels.txt
+DecisionTreeClassifier 
+
+Macro f1:  0.03617304129036093
+Micro f1:  0.0704177897574124
+
+
+
+KNeighborsClassifier 
+
+Macro f1:  0.00991990077550122
+Micro f1:  0.02862254025044723
+
+
+
+MLPClassifier 
+
+Macro f1:  0.003829256348546113
+Micro f1:  0.0034614053305642087
+
+
+
+RandomForestClassifier 
+
+Macro f1:  0.0005421221060768832
+Micro f1:  0.0020905923344947735
+
+
+
+TopKRanker 
+
+Macro f1:  0.02716059431459313
+Micro f1:  0.17346938775510204
+
+
+

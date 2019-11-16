@@ -9,6 +9,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
+from sklearn.multiclass import OneVsRestClassifier
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
@@ -32,6 +33,7 @@ def run_classification_experiment(emb_file,label_file):
         MLPClassifier(random_state=seed, max_iter=500),
         RandomForestClassifier(random_state=seed),
         # TopKRanker(LogisticRegression(solver='liblinear')), # OneVsRest
+        # OneVsRestClassifier(LogisticRegression(solver='lbfgs')), # Terrible OneVsRest
         TopKRanker(LogisticRegression(solver='lbfgs')) # OneVsRest
         ] 
     

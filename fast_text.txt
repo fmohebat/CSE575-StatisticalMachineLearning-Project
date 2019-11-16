@@ -1,0 +1,36 @@
+output/blog-catalog/blog-catalog_FastText-Embedding.emb labels/blog-catalog-labels.txt
+DecisionTreeClassifier 
+
+Macro f1:  0.06166996449305721
+Micro f1:  0.11766706342458765
+
+
+
+KNeighborsClassifier 
+
+Macro f1:  0.05565535342743399
+Micro f1:  0.1218741017533774
+
+
+
+MLPClassifier 
+
+Macro f1:  0.13016447665036196
+Micro f1:  0.2558200366204551
+
+
+
+RandomForestClassifier 
+
+Macro f1:  0.021118190265780646
+Micro f1:  0.048530416951469584
+
+
+
+TopKRanker 
+
+Macro f1:  0.17611350954724173
+Micro f1:  0.33391977480647433
+
+
+

@@ -1,0 +1,36 @@
+output/blog-catalog-node2vec-paper-values.emb labels/blog-catalog-labels.txt
+DecisionTreeClassifier 
+
+Macro f1:  0.0856427150768047
+Micro f1:  0.15510613404646498
+
+
+
+KNeighborsClassifier 
+
+Macro f1:  0.12957482610298068
+Micro f1:  0.2607746863066012
+
+
+
+MLPClassifier 
+
+Macro f1:  0.18612861022402702
+Micro f1:  0.3252595155709343
+
+
+
+RandomForestClassifier 
+
+Macro f1:  0.03869110989198284
+Micro f1:  0.09739826551034023
+
+
+
+TopKRanker 
+
+Macro f1:  0.22797472152744397
+Micro f1:  0.3881069669247009
+
+
+
