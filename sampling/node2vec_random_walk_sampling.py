@@ -4,6 +4,7 @@
 # The implementation is based on Aditya Grover's code: https://github.com/aditya-grover/node2vec
 
 import networkx as nx
+import sys
 import numpy as np
 import random
 from sampling.static_graph_sampling import StaticClassSampling
@@ -142,8 +143,15 @@ class Node2VecRandomWalkSampling(StaticClassSampling):
         G = self.G
         is_directed = self.is_directed
 
+        print('Node2Vec Random Walk preprocessing probs ...')
+        print('Total number of nodes: ', G.number_of_nodes())
+
         alias_nodes = {}
-        for node in G.nodes():
+        for i_node, node in enumerate(G.nodes()):
+            sys.stdout.write('\r')
+            sys.stdout.write('Processing node %d' % (i_node,))
+            sys.stdout.flush()
+
             unnormalized_probs = [self.get_edge_weight(node, nbr) for nbr in sorted(G.neighbors(node))]
             norm_const = sum(unnormalized_probs)
             normalized_probs = [float(u_prob) / norm_const for u_prob in unnormalized_probs]
