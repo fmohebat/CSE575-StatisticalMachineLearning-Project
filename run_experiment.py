@@ -17,16 +17,16 @@ from argparse import ArgumentParser
 
 from sampling.node2vec_random_walk_sampling import Node2VecRandomWalkSampling
 from embedding.node2vec_embedding import Node2VecEmbedding
-from embedding.cbow_embedding import CBOWEmbedding
 from embedding.fast_text_embedding import FastTextEmbedding
-from embedding import embedding_utils
 from embedding.glove_embedding import GloveEmbedding
+from embedding.cbow_embedding import CBOWEmbedding
+from embedding import embedding_utils
 
 
-def run_experiment():
+def run_experiment(data_path):
     print("start")
     # use random walk to sample from the graph
-    data_path = 'data/karate/karate.edgelist'
+    data_name = os.path.splitext(os.path.basename(data_path))[0]
     is_directed = False
 
     node2vec_random_walk_sampling = get_node2vec_random_walk_sampling(data_path, is_directed)
@@ -43,9 +43,11 @@ def run_experiment():
     emb_dir = 'output/'
     if not os.path.exists(emb_dir):
         os.mkdir(emb_dir)
-    # Choose from ['GraphFactorization', 'HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding', 'node2vec', 'FastText']
-    model_to_run = ['HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding', 'node2vec', 'FastText', 'CBOW', 'Glove']
-    #model_to_run = ['Glove']
+    emb_dir += (data_name + '/')
+    if not os.path.exists(emb_dir):
+        os.mkdir(emb_dir)
+    # Choose from ['GraphFactorization', 'HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding', 'node2vec', 'FastText', 'CBOW', 'Glove']
+    model_to_run = ['LaplacianEigenmaps', 'HOPE', 'node2vec', 'FastText']
     models = list()
 
     # Load the models you want to run
@@ -73,7 +75,8 @@ def run_experiment():
         t1 = time()
         # Learn embedding - accepts a networkx graph or file with edge list
         learned_embedding, t = embedding.learn_embedding(graph=sampled_graph, edge_f=None, is_weighted=True, no_python=True)
-        embedding_utils.save_embedding_to_file(learned_embedding, emb_dir+embedding.get_method_name()+'.emb')
+        # Save embedding to file
+        embedding_utils.save_embedding_to_file(learned_embedding, emb_dir + data_name + '_' + embedding.get_method_name() + '.emb')
         print(embedding.get_method_name() + ':\n\tTraining time: %f' % (time() - t1))
         # Evaluate on graph reconstruction
         MAP, prec_curv, err, err_baseline = gr.evaluateStaticGraphReconstruction(sampled_graph, embedding, learned_embedding, None)
@@ -101,12 +104,25 @@ def get_node2vec_random_walk_sampling(data_path, is_directed):
 
 def get_node2vec_model(walks):
     kwargs = dict()
-    d = 2
+    d = 128
     kwargs['max_iter'] = 1
     kwargs['walks'] = walks
     kwargs['window_size'] = 10
     kwargs['n_workers'] = 8
+
     return Node2VecEmbedding(d, **kwargs)
+
+
+def get_fast_text_model(walks):
+    kwargs = dict()
+    d = 128
+    kwargs['max_iter'] = 1
+    kwargs['walks'] = walks
+    kwargs['window_size'] = 10
+    kwargs['n_workers'] = 8
+
+    return FastTextEmbedding(d, **kwargs)
+
 
 def get_cbow_model(walks):
     kwargs = dict()
@@ -116,6 +132,7 @@ def get_cbow_model(walks):
     kwargs['window_size'] = 10
     kwargs['n_workers'] = 8
     return CBOWEmbedding(d, **kwargs)
+
 
 def get_glove_model(walks):
     kwargs = dict()
@@ -128,16 +145,9 @@ def get_glove_model(walks):
     kwargs['num_threads'] = 4
     return GloveEmbedding(d, **kwargs)
 
-def get_fast_text_model(walks):
-    kwargs = dict()
-    d = 2
-    kwargs['max_iter'] = 1
-    kwargs['walks'] = walks
-    kwargs['window_size'] = 10
-    kwargs['n_workers'] = 8
-
-    return FastTextEmbedding(d, **kwargs)
-
 
 if __name__ == '__main__':
-    run_experiment()
+    data_list = ['data/youtube-deepwalk/youtube-deepwalk.edgelist']
+    for i in range(0, len(data_list)):
+        print('Run experiment using dataset: ' + data_list[i])
+        run_experiment(data_list[i])
