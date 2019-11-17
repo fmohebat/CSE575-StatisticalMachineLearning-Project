@@ -81,5 +81,3 @@ class GloveEmbedding:
         return adj_mtx_r
 
 
-if __name__ == '__main__':
-    print(str(glove))
