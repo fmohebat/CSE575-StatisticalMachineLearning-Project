@@ -27,15 +27,11 @@ from embedding import embedding_utils
 from sampling import sampling_utils
 
 glove = None
-Glove = None
-Corpus = None
 # noinspection PyBroadException
 try:
     glove = importlib.import_module('glove')
-    Glove = importlib.import_module('glove.Glove')
-    Corpus = importlib.import_module('glove.Corpus')
 except Exception:
-    print('Failed to import Glove - system info: ' + platform.platform())
+    print('Failed to import glove - system info: ' + platform.platform())
 
 
 def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
@@ -53,7 +49,11 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
         # save to local file
         if is_save_walks:
             fname = random_walk_sampling.get_name() + '-' + str(datetime.timestamp(datetime.now()))
-            sampling_utils.save_sampled_walks(G=None, walks=walks, dir='./sampled_walks/', fname=fname)
+            walks_dir = './sampled_walks/'
+            if not os.path.exists(walks_dir):
+                os.mkdir(walks_dir)
+            walks_dir = walks_dir + data_name + '/'
+            sampling_utils.save_sampled_walks(G=None, walks=walks, dir=walks_dir, fname=fname)
 
     print('number of nodes in the sampled graph: ', sampled_graph.number_of_nodes())
     print('number of edges in the sampled graph: ', sampled_graph.number_of_edges())
@@ -107,11 +107,6 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
         MAP, prec_curv, err, err_baseline = gr.evaluateStaticGraphReconstruction(sampled_graph, embedding, learned_embedding, None)
         # ---------------------------------------------------------------------------------
         print(("\tMAP: {} \t precision curve: {}\n\n\n\n" + '-' * 100).format(MAP, prec_curv[:5]))
-        # ---------------------------------------------------------------------------------
-        # Visualize
-        viz.plot_embedding2D(embedding.get_embedding(), di_graph=sampled_graph, node_colors=None)
-        plt.show()
-        plt.clf()
 
 
 def get_node2vec_random_walk_sampling(data_path, is_directed):
@@ -172,7 +167,7 @@ def get_glove_model(walks):
 
 
 if __name__ == '__main__':
-    data_list = ['data/blog-catalog-deepwalk/blog-catalog.edgelist']
+    data_list = ['data/karate/karate.edgelist']
     sampled_walks_list = [None]
     is_save_walks_list = [True]
 
