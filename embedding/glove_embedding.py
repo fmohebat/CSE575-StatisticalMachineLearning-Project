@@ -1,5 +1,4 @@
-#importing the glove library
-from glove import Corpus, Glove
+
 import numpy as np
 import time
 from gensim.scripts.glove2word2vec import glove2word2vec

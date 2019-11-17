@@ -39,6 +39,11 @@ class Node2VecRandomWalkSampling(StaticClassSampling):
         self.alias_nodes = None
         self.alias_edges = None
 
+        self.name = 'node2vec-random-walk'
+
+    def get_name(self):
+        return self.name
+
     def get_sampled_graph(self):
         self.preprocess_transition_probs()
         return self.simulate_walks(self.walk_length, self.num_walks_iter, self.max_sampled_walk)
@@ -55,7 +60,7 @@ class Node2VecRandomWalkSampling(StaticClassSampling):
         walks = []
         nodes = list(self.G.nodes())
         n_edges = self.G.number_of_edges()
-        print("Total number of nodes: ", len(nodes))
+        print("\nTotal number of nodes: ", len(nodes))
         print("Total number of edges: ", n_edges)
 
         print("Start random walks ...")
@@ -64,11 +69,14 @@ class Node2VecRandomWalkSampling(StaticClassSampling):
         is_stopped = False
         while not is_stopped:
             random.shuffle(nodes)
-            for node in nodes:
-                # print("- Walk iteration: ", str(walk_iter + 1))
+            for i_node, node in enumerate(nodes):
+                sys.stdout.write('\r')
+                sys.stdout.write('Sampling from node %d' % (i_node,))
+                sys.stdout.flush()
+
                 sampled_walk = self.node2vec_walk(walk_length=walk_length, start_node=node)
                 walks.append(sampled_walk)
-                # print(sampled_walk)
+
                 previous_node = sampled_walk[0]
                 # use the sampled_walk to construct the sampled_graph
                 for i in range(1, len(sampled_walk)):
@@ -88,6 +96,7 @@ class Node2VecRandomWalkSampling(StaticClassSampling):
                 is_stopped = True
                 break
 
+        print('\nFinish sampling ...')
         return sampled_graph, walks
 
     def node2vec_walk(self, walk_length, start_node):
@@ -144,12 +153,12 @@ class Node2VecRandomWalkSampling(StaticClassSampling):
         is_directed = self.is_directed
 
         print('Node2Vec Random Walk preprocessing probs ...')
-        print('Total number of nodes: ', G.number_of_nodes())
+        print('\tStart processing nodes: ', G.number_of_nodes())
 
         alias_nodes = {}
         for i_node, node in enumerate(G.nodes()):
             sys.stdout.write('\r')
-            sys.stdout.write('Processing node %d' % (i_node,))
+            sys.stdout.write('\tProcessing node %d' % (i_node,))
             sys.stdout.flush()
 
             unnormalized_probs = [self.get_edge_weight(node, nbr) for nbr in sorted(G.neighbors(node))]
@@ -160,11 +169,18 @@ class Node2VecRandomWalkSampling(StaticClassSampling):
         alias_edges = {}
         triads = {}
 
+        print('\n\tStart processing edges: ', G.number_of_edges())
         if is_directed:
-            for edge in G.edges():
+            for i_edge, edge in enumerate(G.edges()):
+                sys.stdout.write('\r')
+                sys.stdout.write('\tProcessing edge %d' % (i_edge,))
+                sys.stdout.flush()
                 alias_edges[edge] = self.get_alias_edge(edge[0], edge[1])
         else:
-            for edge in G.edges():
+            for i_edge, edge in enumerate(G.edges()):
+                sys.stdout.write('\r')
+                sys.stdout.write('\tProcessing edge %d' % (i_edge,))
+                sys.stdout.flush()
                 alias_edges[edge] = self.get_alias_edge(edge[0], edge[1])
                 alias_edges[(edge[1], edge[0])] = self.get_alias_edge(edge[1], edge[0])
 

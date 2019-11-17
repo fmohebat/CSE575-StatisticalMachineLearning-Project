@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from time import time
 import networkx as nx
 import os
+from datetime import datetime
 
 from gem.utils import graph_util, plot_util
 from gem.evaluation import visualize_embedding as viz
@@ -21,16 +22,26 @@ from embedding.fast_text_embedding import FastTextEmbedding
 from embedding.glove_embedding import GloveEmbedding
 from embedding.cbow_embedding import CBOWEmbedding
 from embedding import embedding_utils
+from sampling import sampling_utils
 
 
-def run_experiment(data_path):
-    print("start")
+def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
+    print("Starting experiment ...")
     # use random walk to sample from the graph
     data_name = os.path.splitext(os.path.basename(data_path))[0]
     is_directed = False
 
-    node2vec_random_walk_sampling = get_node2vec_random_walk_sampling(data_path, is_directed)
-    sampled_graph, walks = node2vec_random_walk_sampling.get_sampled_graph()
+    if sampled_walk_file is not None:
+        sampled_graph = nx.read_edgelist(data_path, data=(('weight', float),), create_using=nx.Graph, nodetype=int)
+        walks = sampling_utils.load_sampled_walks(sampled_walk_file)
+    else:
+        random_walk_sampling = get_node2vec_random_walk_sampling(data_path, is_directed)
+        sampled_graph, walks = random_walk_sampling.get_sampled_graph()
+        # save to local file
+        if is_save_walks:
+            fname = random_walk_sampling.get_name() + '-' + str(datetime.timestamp(datetime.now()))
+            sampling_utils.save_sampled_walks(G=None, walks=walks, dir='./sampled_walks/', fname=fname)
+
     print('number of nodes in the sampled graph: ', sampled_graph.number_of_nodes())
     print('number of edges in the sampled graph: ', sampled_graph.number_of_edges())
     print('number of walks: ', len(walks))
@@ -46,19 +57,20 @@ def run_experiment(data_path):
     emb_dir += (data_name + '/')
     if not os.path.exists(emb_dir):
         os.mkdir(emb_dir)
-    # Choose from ['GraphFactorization', 'HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding', 'node2vec', 'FastText', 'CBOW', 'Glove']
+    # Choose from ['GraphFactorization', 'HOPE', 'LaplacianEigenmaps'
+    # , 'LocallyLinearEmbedding', 'node2vec' , 'FastText', 'CBOW', 'Glove']
     model_to_run = ['LaplacianEigenmaps', 'HOPE', 'node2vec', 'FastText']
     models = list()
 
     # Load the models you want to run
     if 'GraphFactorization' in model_to_run:
-        models.append(GraphFactorization(d=2, max_iter=50000, eta=1 * 10 ** -4, regu=1.0))
+        models.append(GraphFactorization(d=128, max_iter=1000, eta=1 * 10 ** -4, regu=1.0))
     if 'HOPE' in model_to_run:
-        models.append(HOPE(d=4, beta=0.01))
+        models.append(HOPE(d=256, beta=0.01))
     if 'LaplacianEigenmaps' in model_to_run:
-        models.append(LaplacianEigenmaps(d=2))
+        models.append(LaplacianEigenmaps(d=128))
     if 'LocallyLinearEmbedding' in model_to_run:
-        models.append(LocallyLinearEmbedding(d=2))
+        models.append(LocallyLinearEmbedding(d=128))
     if 'node2vec' in model_to_run:
         models.append(get_node2vec_model(walks))
     if 'FastText' in model_to_run:
@@ -147,7 +159,12 @@ def get_glove_model(walks):
 
 
 if __name__ == '__main__':
-    data_list = ['data/youtube-deepwalk/youtube-deepwalk.edgelist']
+    data_list = ['data/blog-catalog-deepwalk/blog-catalog.edgelist']
+    sampled_walks_list = [None]
+    is_save_walks_list = [True]
+
     for i in range(0, len(data_list)):
         print('Run experiment using dataset: ' + data_list[i])
-        run_experiment(data_list[i])
+        if sampled_walks_list[i] is not None:
+            print('Run experiment using sampled walks: ' + str(sampled_walks_list[i]))
+        run_experiment(data_list[i], sampled_walks_list[i], is_save_walks_list[i])
