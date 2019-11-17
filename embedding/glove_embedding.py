@@ -1,10 +1,22 @@
-
+import importlib
 import numpy as np
 import time
+import platform
 from gensim.scripts.glove2word2vec import glove2word2vec
 from gensim.models import KeyedVectors
 
 from embedding import embedding_utils
+
+glove = None
+Glove = None
+Corpus = None
+# noinspection PyBroadException
+try:
+    glove = importlib.import_module('glove')
+    Glove = importlib.import_module('glove.Glove')
+    Corpus = importlib.import_module('glove.Corpus')
+except Exception:
+    print('Failed to import Glove - system info: ' + platform.platform())
 
 
 class GloveEmbedding:
@@ -44,32 +56,14 @@ class GloveEmbedding:
         return np.dot(self.embedding[i, :], self.embedding[j, :])
 
     def learn_embedding(self, graph=None, edge_f=None, is_weighted=False, no_python=False):
-
         t1 = time.time()
         walks = self.walks
-        
-        walks = [list(map(int, walk)) for walk in walks]
-        with open('glove.6B.100d.txt', 'w') as f:
-            for row in walks:
-                for item in row:
-                    f.write("%s " % item)
-                f.write("\n")
-
-        glove_input_file = 'glove.6B.100d.txt'
-        word2vec_output_file = 'glove.6B.100d.txt.word2vec'
-        glove2word2vec(glove_input_file, word2vec_output_file)
-        filename = 'glove.6B.100d.txt.word2vec'
-        model = KeyedVectors.load_word2vec_format(filename, binary=False)
 
         walks = [list(map(str, walk)) for walk in walks]
         self.embedding = embedding_utils.gensim_model_to_embedding(model, walks)
         self._node_num = self.embedding.shape[0]
         t2 = time.time()
 
-        import os
-        os.remove(glove_input_file)
-        os.remove(word2vec_output_file)
-        
         return self.embedding, t2-t1
 
     def get_reconstructed_adj(self, X=None, node_l=None):
@@ -85,3 +79,7 @@ class GloveEmbedding:
                     continue
                 adj_mtx_r[v_i, v_j] = self.get_edge_weight(v_i, v_j)
         return adj_mtx_r
+
+
+if __name__ == '__main__':
+    print(str(glove))

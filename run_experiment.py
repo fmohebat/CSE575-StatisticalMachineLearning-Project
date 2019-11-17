@@ -3,6 +3,8 @@ from time import time
 import networkx as nx
 import os
 from datetime import datetime
+import importlib
+import platform
 
 from gem.utils import graph_util, plot_util
 from gem.evaluation import visualize_embedding as viz
@@ -23,6 +25,17 @@ from embedding.glove_embedding import GloveEmbedding
 from embedding.cbow_embedding import CBOWEmbedding
 from embedding import embedding_utils
 from sampling import sampling_utils
+
+glove = None
+Glove = None
+Corpus = None
+# noinspection PyBroadException
+try:
+    glove = importlib.import_module('glove')
+    Glove = importlib.import_module('glove.Glove')
+    Corpus = importlib.import_module('glove.Corpus')
+except Exception:
+    print('Failed to import Glove - system info: ' + platform.platform())
 
 
 def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
@@ -77,7 +90,7 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
         models.append(get_fast_text_model(walks))
     if 'CBOW' in model_to_run:
         models.append(get_cbow_model(walks))
-    if 'Glove' in model_to_run:
+    if 'Glove' in model_to_run and glove is not None:
         models.append(get_glove_model(walks))
 
     # For each model, learn the embedding and evaluate on graph reconstruction and visualization
