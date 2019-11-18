@@ -10,7 +10,7 @@
     - Return hyper-parameter. Default is 1 (-p:)=1
     - Inout hyper-parameter. Default is 1 (-q:)=1
 - CBOW
-    - embedding: flickr-deepwalk_CBOW-Embedding_1574110071.6025774.emb
+    - embedding: flickr-deepwalk_CBOW-Embedding_1574113172.4532826.emb
         - d = 128
         - kwargs[\'max\_iter\'] = 1
         - kwargs[\'walks\'] = walks
@@ -31,6 +31,12 @@
         - kwargs[\'window\_size\'] = 10
         - kwargs[\'n\_workers\'] = 5
 - LocallyLinearEmbedding
-    - embedding: flickr-deepwalk_lle_svd_1574110394.0791392.emb
+    - embedding: flickr-deepwalk_lle_svd_1574113282.1872377.emb
         - LocallyLinearEmbedding(d=128)
-    
+- Glove
+     - embedding: flickr-deepwalk_GloVe-Embedding_1574115923.87.emb
+        - d = 128
+        - kwargs[\'max\_iter\'] = 5
+        - kwargs[\'walks\'] = walks
+        - kwargs[\'window\_size\'] = 10
+        - kwargs[\'n\_workers\'] = 5

@@ -15,9 +15,7 @@ import platform
 from sampling.node2vec_random_walk_sampling import Node2VecRandomWalkSampling
 
 from embedding import embedding_utils
-
-sampling = None
-sampling_utils = None
+from sampling import sampling_utils
 
 
 glove = None
@@ -186,16 +184,20 @@ def get_glove_model(walks):
     kwargs['max_iter'] = 5
     kwargs['walks'] = walks
     kwargs['window_size'] = 10
-    kwargs['n_workers'] = 4
+    kwargs['n_workers'] = 5
     kwargs['learning_rate'] = 0.05
     kwargs['verbose'] = False
     return GloveEmbedding(d, **kwargs)
 
 
 if __name__ == '__main__':
-    data_list = ['../data/karate/karate.edgelist']
-    sampled_walks_list = ['../sampled_walks/karate/node2vec-random-walk-1573953136.247604.txt']
-    is_save_walks_list = [False]
+    # candidate: ['../data/blog-catalog-deepwalk/blog-catalog.edgelist', '../data/flickr-deepwalk/flickr-deepwalk.edgelist']
+    data_list = ['../data/blog-catalog-deepwalk/blog-catalog.edgelist',
+                 '../data/flickr-deepwalk/flickr-deepwalk.edgelist']
+    # candidate: ['../sampled_walks/blog-catalog/node2vec-random-walk-1574042236.322876.txt', '../sampled_walks/flickr-deepwalk/node2vec-random-walk-1574063574.331607.txt']
+    sampled_walks_list = ['../sampled_walks/blog-catalog/node2vec-random-walk-1574042236.322876.txt',
+                          '../sampled_walks/flickr-deepwalk/node2vec-random-walk-1574063574.331607.txt']
+    is_save_walks_list = [False, False]
 
     for i in range(0, len(data_list)):
         print('Run experiment using dataset: ' + data_list[i])

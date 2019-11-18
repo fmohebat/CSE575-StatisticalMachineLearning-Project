@@ -77,7 +77,7 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
         os.mkdir(emb_dir)
     # Choose from ['GraphFactorization', 'HOPE', 'LaplacianEigenmaps'
     # , 'LocallyLinearEmbedding', 'node2vec' , 'FastText', 'CBOW', 'Glove']
-    model_to_run = ['CBOW']
+    model_to_run = ['CBOW', 'LocallyLinearEmbedding']
     models = list()
 
     # Load the models you want to run
@@ -176,8 +176,8 @@ def get_glove_model(walks):
 
 
 if __name__ == '__main__':
-    # candidate: ['./data/blog-catalog-deepwalk/blog-catalog.edgelist', './data/flickr-deepwalk/blog-catalog.edgelist']
-    data_list = ['./data/blog-catalog-deepwalk/blog-catalog.edgelist', './data/flickr-deepwalk/blog-catalog.edgelist']
+    # candidate: ['./data/blog-catalog-deepwalk/blog-catalog.edgelist', './data/flickr-deepwalk/flickr-deepwalk.edgelist']
+    data_list = ['./data/blog-catalog-deepwalk/blog-catalog.edgelist', './data/flickr-deepwalk/flickr-deepwalk.edgelist']
     # candidate: ['./sampled_walks/blog-catalog/node2vec-random-walk-1574042236.322876.txt', './sampled_walks/flickr-deepwalk/node2vec-random-walk-1574063574.331607.txt']
     sampled_walks_list = ['./sampled_walks/blog-catalog/node2vec-random-walk-1574042236.322876.txt', './sampled_walks/flickr-deepwalk/node2vec-random-walk-1574063574.331607.txt']
     is_save_walks_list = [False, False]
