@@ -77,8 +77,8 @@ if __name__ == '__main__':
     "blog-catalog_FastText-Embedding.emb",
     "blog-catalog_hope_gsvd.emb" ]
 
-    emb_file_dir = "/Users/nathan/Documents/ASU/CSE/575/Project/SMLProject/CSE575-StatisticalMachineLearning-Project/output/blog-catalog/"
-    label_file = "/Users/nathan/Documents/ASU/CSE/575/Project/SMLProject/CSE575-StatisticalMachineLearning-Project/labels/blog-catalog-labels.txt"
+    emb_file_dir = "./output/blog-catalog/"
+    label_file = "./labels/blog-catalog-labels.txt"
 
     csv_file = csv.writer(open('emb_output.csv', 'w'))
 
