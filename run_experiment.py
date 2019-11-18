@@ -100,18 +100,20 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
 
     # For each model, learn the embedding and evaluate on graph reconstruction and visualization
     print('\n\nStart learning embedding ...')
+    print('Num nodes: %d, num edges: %d' % (sampled_graph.number_of_nodes(), sampled_graph.number_of_edges()))
     for embedding in models:
-        print('Num nodes: %d, num edges: %d' % (sampled_graph.number_of_nodes(), sampled_graph.number_of_edges()))
+        print('\nLearning embedding using %s ...' % (embedding.get_method_name(), ))
         t1 = time()
         # Learn embedding - accepts a networkx graph or file with edge list
         learned_embedding, t = embedding.learn_embedding(graph=sampled_graph, edge_f=None, is_weighted=True, no_python=True)
         # Save embedding to file
         embedding_utils.save_embedding_to_file(learned_embedding, emb_dir + data_name + '_' + embedding.get_method_name() + '.emb')
         print(embedding.get_method_name() + ':\n\tTraining time: %f' % (time() - t1))
-        # Evaluate on graph reconstruction
-        MAP, prec_curv, err, err_baseline = gr.evaluateStaticGraphReconstruction(sampled_graph, embedding, learned_embedding, None)
+        # you can add visualization and evaluation here
+        # Example: Evaluate on graph reconstruction
+        # MAP, prec_curv, err, err_baseline = gr.evaluateStaticGraphReconstruction(sampled_graph, embedding, learned_embedding, None)
         # ---------------------------------------------------------------------------------
-        print(("\tMAP: {} \t precision curve: {}\n\n\n\n" + '-' * 100).format(MAP, prec_curv[:5]))
+        # print(("\tMAP: {} \t precision curve: {}\n\n\n\n" + '-' * 100).format(MAP, prec_curv[:5]))
 
 
 def get_node2vec_random_walk_sampling(data_path, is_directed):
@@ -170,12 +172,11 @@ def get_glove_model(walks):
     kwargs['window_size'] = 10
     kwargs['n_workers'] = 5
     kwargs['learning_rate'] = 0.05
-    kwargs['num_threads'] = 4
     return GloveEmbedding(d, **kwargs)
 
 
 if __name__ == '__main__':
-    data_list = ['data/blog-catalog-deepwalk/blog-catalog.edgelist']
+    data_list = ['data/flickr-deepwalk/flickr-deepwalk.edgelist']
     sampled_walks_list = [None]
     is_save_walks_list = [True]
 

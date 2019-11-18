@@ -156,8 +156,9 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
 
     # For each model, learn the embedding and evaluate on graph reconstruction and visualization
     print('\n\nStart learning embedding ...')
+    print('Num nodes: %d, num edges: %d' % (sampled_graph.number_of_nodes(), sampled_graph.number_of_edges()))
     for embedding in models:
-        print('Num nodes: %d, num edges: %d' % (sampled_graph.number_of_nodes(), sampled_graph.number_of_edges()))
+        print('\nLearning embedding using %s ...' % (embedding.get_method_name(),))
         t1 = time.time()
         # Learn embedding - accepts a networkx graph or file with edge list
         learned_embedding, t = embedding.learn_embedding(graph=sampled_graph, edge_f=None, is_weighted=True, no_python=True)

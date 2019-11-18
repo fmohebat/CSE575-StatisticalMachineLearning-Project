@@ -93,6 +93,7 @@ class Node2VecRandomWalkSampling(StaticClassSampling):
         if self.is_weighted:
             args.append('-w')
         args.append('-ow')
+        args.append('-v')
 
         try:
             print(args)
