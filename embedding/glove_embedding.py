@@ -120,7 +120,7 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
     is_directed = False
 
     if sampled_walk_file is not None:
-        sampled_graph = nx.read_edgelist(data_path, data=(('weight', float),), create_using=nx.Graph, nodetype=int)
+        sampled_graph = nx.read_edgelist(data_path, data=(('weight', float),), create_using=nx.Graph(), nodetype=int)
         walks = sampling_utils.load_sampled_walks(sampled_walk_file)
     else:
         random_walk_sampling = get_node2vec_random_walk_sampling(data_path, is_directed)
@@ -193,9 +193,9 @@ def get_glove_model(walks):
 
 
 if __name__ == '__main__':
-    data_list = ['../data/blog-catalog-deepwalk/blog-catalog.edgelist']
-    sampled_walks_list = ['../sampled_walks/blog-catalog/node2vec-random-walk-1573955197.082777.txt']
-    is_save_walks_list = [True]
+    data_list = ['../data/karate/karate.edgelist']
+    sampled_walks_list = ['../sampled_walks/karate/node2vec-random-walk-1573953136.247604.txt']
+    is_save_walks_list = [False]
 
     for i in range(0, len(data_list)):
         print('Run experiment using dataset: ' + data_list[i])

@@ -46,7 +46,7 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
     is_directed = False
 
     if sampled_walk_file is not None:
-        sampled_graph = nx.read_edgelist(data_path, data=(('weight', float),), create_using=nx.Graph, nodetype=int)
+        sampled_graph = nx.read_edgelist(data_path, data=(('weight', float),), create_using=nx.Graph(), nodetype=int)
         walks = sampling_utils.load_sampled_walks(sampled_walk_file)
     else:
         random_walk_sampling = get_node2vec_random_walk_sampling(data_path, is_directed)
@@ -77,18 +77,10 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
         os.mkdir(emb_dir)
     # Choose from ['GraphFactorization', 'HOPE', 'LaplacianEigenmaps'
     # , 'LocallyLinearEmbedding', 'node2vec' , 'FastText', 'CBOW', 'Glove']
-    model_to_run = ['node2vec', 'FastText']
+    model_to_run = ['node2vec', 'FastText', 'CBOW', 'GraphFactorization', 'HOPE', 'LaplacianEigenmaps', 'LocallyLinearEmbedding']
     models = list()
 
     # Load the models you want to run
-    if 'GraphFactorization' in model_to_run:
-        models.append(GraphFactorization(d=128, max_iter=1000, eta=1 * 10 ** -4, regu=1.0))
-    if 'HOPE' in model_to_run:
-        models.append(HOPE(d=256, beta=0.01))
-    if 'LaplacianEigenmaps' in model_to_run:
-        models.append(LaplacianEigenmaps(d=128))
-    if 'LocallyLinearEmbedding' in model_to_run:
-        models.append(LocallyLinearEmbedding(d=128))
     if 'node2vec' in model_to_run:
         models.append(get_node2vec_model(walks))
     if 'FastText' in model_to_run:
@@ -97,6 +89,14 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
         models.append(get_cbow_model(walks))
     if 'Glove' in model_to_run and glove is not None:
         models.append(get_glove_model(walks))
+    if 'GraphFactorization' in model_to_run:
+        models.append(GraphFactorization(d=128, max_iter=1000, eta=1 * 10 ** -4, regu=1.0))
+    if 'HOPE' in model_to_run:
+        models.append(HOPE(d=128, beta=0.01))
+    if 'LaplacianEigenmaps' in model_to_run:
+        models.append(LaplacianEigenmaps(d=128))
+    if 'LocallyLinearEmbedding' in model_to_run:
+        models.append(LocallyLinearEmbedding(d=128))
 
     # For each model, learn the embedding and evaluate on graph reconstruction and visualization
     print('\n\nStart learning embedding ...')
@@ -138,7 +138,7 @@ def get_node2vec_model(walks):
     kwargs['max_iter'] = 1
     kwargs['walks'] = walks
     kwargs['window_size'] = 10
-    kwargs['n_workers'] = 8
+    kwargs['n_workers'] = 5
 
     return Node2VecEmbedding(d, **kwargs)
 
@@ -149,24 +149,24 @@ def get_fast_text_model(walks):
     kwargs['max_iter'] = 1
     kwargs['walks'] = walks
     kwargs['window_size'] = 10
-    kwargs['n_workers'] = 8
+    kwargs['n_workers'] = 5
 
     return FastTextEmbedding(d, **kwargs)
 
 
 def get_cbow_model(walks):
     kwargs = dict()
-    d = 2
+    d = 128
     kwargs['max_iter'] = 1
     kwargs['walks'] = walks
     kwargs['window_size'] = 10
-    kwargs['n_workers'] = 8
+    kwargs['n_workers'] = 5
     return CBOWEmbedding(d, **kwargs)
 
 
 def get_glove_model(walks):
     kwargs = dict()
-    d = 2
+    d = 128
     kwargs['max_iter'] = 1
     kwargs['walks'] = walks
     kwargs['window_size'] = 10
@@ -176,9 +176,9 @@ def get_glove_model(walks):
 
 
 if __name__ == '__main__':
-    data_list = ['data/flickr-deepwalk/flickr-deepwalk.edgelist']
-    sampled_walks_list = [None]
-    is_save_walks_list = [True]
+    data_list = ['./data/blog-catalog-deepwalk/blog-catalog.edgelist']
+    sampled_walks_list = ['./sampled_walks/blog-catalog/node2vec-random-walk-1574042236.322876.txt']
+    is_save_walks_list = [False]
 
     for i in range(0, len(data_list)):
         print('Run experiment using dataset: ' + data_list[i])
