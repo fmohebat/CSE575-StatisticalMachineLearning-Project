@@ -27,11 +27,16 @@ from embedding import embedding_utils
 from sampling import sampling_utils
 
 glove = None
+Glove = None
+Corpus = None
 # noinspection PyBroadException
 try:
     glove = importlib.import_module('glove')
 except Exception:
     print('Failed to import glove - system info: ' + platform.platform())
+if glove is not None:
+    Glove = getattr(glove, 'Glove')
+    Corpus = getattr(glove, 'Corpus')
 
 
 def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
