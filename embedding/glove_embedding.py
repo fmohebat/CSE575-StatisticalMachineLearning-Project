@@ -163,7 +163,7 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
         # Learn embedding - accepts a networkx graph or file with edge list
         learned_embedding, t = embedding.learn_embedding(graph=sampled_graph, edge_f=None, is_weighted=True, no_python=True)
         # Save embedding to file
-        embedding_utils.save_embedding_to_file(learned_embedding, emb_dir + data_name + '_' + embedding.get_method_name() + '.emb')
+        embedding_utils.save_embedding_to_file(learned_embedding, emb_dir + data_name + '_' + embedding.get_method_name() + '_' + str(t1) + '.emb')
         print(embedding.get_method_name() + ':\n\tTraining time: %f' % (time.time() - t1))
 
 
