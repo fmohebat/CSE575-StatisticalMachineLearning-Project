@@ -77,7 +77,7 @@ def run_experiment(data_path, sampled_walk_file=None, is_save_walks=False):
         os.mkdir(emb_dir)
     # Choose from ['GraphFactorization', 'HOPE', 'LaplacianEigenmaps'
     # , 'LocallyLinearEmbedding', 'node2vec' , 'FastText', 'CBOW', 'Glove']
-    model_to_run = ['LaplacianEigenmaps', 'HOPE', 'node2vec', 'FastText']
+    model_to_run = ['node2vec', 'FastText']
     models = list()
 
     # Load the models you want to run
@@ -123,6 +123,9 @@ def get_node2vec_random_walk_sampling(data_path, is_directed):
     kwargs['num_walks_iter'] = 10
     # set the maximum number of sampled walks (if None, the algorithm will sample from the entire graph)
     kwargs['max_sampled_walk'] = None
+    # use c executable as default
+    kwargs['is_use_python'] = False
+    kwargs['node2vec_c_executable'] = 'node2vec'
 
     return Node2VecRandomWalkSampling(None, data_path, is_directed, **kwargs)
 
@@ -172,7 +175,7 @@ def get_glove_model(walks):
 
 
 if __name__ == '__main__':
-    data_list = ['data/karate/karate.edgelist']
+    data_list = ['data/blog-catalog-deepwalk/blog-catalog.edgelist']
     sampled_walks_list = [None]
     is_save_walks_list = [True]
 
