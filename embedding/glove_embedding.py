@@ -192,8 +192,8 @@ def get_glove_model(walks):
 
 
 if __name__ == '__main__':
-    data_list = ['../data/karate/karate.edgelist']
-    sampled_walks_list = [None]
+    data_list = ['../data/blog-catalog-deepwalk/blog-catalog.edgelist']
+    sampled_walks_list = ['../sampled_walks/blog-catalog/node2vec-random-walk-1573955197.082777.txt']
     is_save_walks_list = [True]
 
     for i in range(0, len(data_list)):
