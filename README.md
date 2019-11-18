@@ -7,7 +7,7 @@ In the multi-label classification for graph nodes problem, we are given a graph 
 By utilizing the random sampling method established by node2vec and modifying the choice of embedd in gand classiﬁcation models, we expect to optimize the DLRW methods for the case of multi-label node classiﬁcation on large graphs. The improvement will be determined by improved node-classiﬁcation accuracy as measured by Macro/Micro-F1 scores on datasets across a variety of ﬁelds while maintaining the tractability of the algorithm for large graph datasets.
 
 ## Used Libraries
-- **networkx**: use networkx to represent and store the graph 
+- **networkx==2.0**: use networkx to represent and store the graph 
 - **gensim**: Gensim is a Python library for topic modelling, document indexing and similarity retrieval with large corpora; target audience is the natural language processing (NLP) and information retrieval (IR) community.
 
 ## Implementation Pipeline

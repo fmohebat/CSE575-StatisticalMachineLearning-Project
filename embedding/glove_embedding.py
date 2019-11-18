@@ -191,13 +191,11 @@ def get_glove_model(walks):
 
 
 if __name__ == '__main__':
-    # candidate: ['../data/blog-catalog-deepwalk/blog-catalog.edgelist', '../data/flickr-deepwalk/flickr-deepwalk.edgelist']
-    data_list = ['../data/blog-catalog-deepwalk/blog-catalog.edgelist',
-                 '../data/flickr-deepwalk/flickr-deepwalk.edgelist']
-    # candidate: ['../sampled_walks/blog-catalog/node2vec-random-walk-1574042236.322876.txt', '../sampled_walks/flickr-deepwalk/node2vec-random-walk-1574063574.331607.txt']
-    sampled_walks_list = ['../sampled_walks/blog-catalog/node2vec-random-walk-1574042236.322876.txt',
-                          '../sampled_walks/flickr-deepwalk/node2vec-random-walk-1574063574.331607.txt']
-    is_save_walks_list = [False, False]
+    # candidate: ['../data/blog-catalog-deepwalk/blog-catalog.edgelist', '../data/flickr-deepwalk/flickr-deepwalk.edgelist', '../data/sbm/sbm.edgelist']
+    data_list = ['../data/sbm/sbm.edgelist']
+    # candidate: ['../sampled_walks/blog-catalog/node2vec-random-walk-1574042236.322876.txt', '../sampled_walks/flickr-deepwalk/node2vec-random-walk-1574063574.331607.txt', '../sampled_walks/sbm/node2vec-random-walk-1574119485.050326.txt']
+    sampled_walks_list = ['../sampled_walks/sbm/node2vec-random-walk-1574119485.050326.txt']
+    is_save_walks_list = [False]
 
     for i in range(0, len(data_list)):
         print('Run experiment using dataset: ' + data_list[i])
