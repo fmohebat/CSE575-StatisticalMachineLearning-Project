@@ -176,8 +176,8 @@ def get_glove_model(walks):
 
 
 if __name__ == '__main__':
-    # candidate: ['./data/blog-catalog-deepwalk/blog-catalog.edgelist', './data/flickr-deepwalk/flickr-deepwalk.edgelist', './data/sbm/sbm.edgelist']
-    data_list = ['./data/sbm/sbm.edgelist']
+    # candidate: ['./data/youtube-deepwalk/youtube-deepwalk.edgelist', './data/blog-catalog-deepwalk/blog-catalog.edgelist', './data/flickr-deepwalk/flickr-deepwalk.edgelist', './data/sbm/sbm.edgelist']
+    data_list = ['./data/youtube-deepwalk/youtube-deepwalk.edgelist']
     # candidate: ['./sampled_walks/blog-catalog/node2vec-random-walk-1574042236.322876.txt', './sampled_walks/flickr-deepwalk/node2vec-random-walk-1574063574.331607.txt']
     sampled_walks_list = [None]
     is_save_walks_list = [True]

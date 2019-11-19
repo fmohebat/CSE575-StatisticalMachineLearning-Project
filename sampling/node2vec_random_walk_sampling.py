@@ -305,7 +305,7 @@ def alias_draw(J, q):
 
 
 def run_test():
-    data_path = '../data/karate/karate.edgelist'
+    data_path = '../data/youtube-deepwalk/youtube-deepwalk.edgelist'
     is_directed = False
 
     kwargs = dict()
@@ -317,7 +317,7 @@ def run_test():
     # set the maximum number of sampled walks (if None, the algorithm will sample from the entire graph)
     kwargs['max_sampled_walk'] = None
     kwargs['is_use_python'] = False
-    kwargs['node2vec_c_executable'] = 'node2vec'
+    kwargs['node2vec_c_executable'] = '/home/local/ASUAD/lguan9/Documents/Development/SNAP/snap/executables/node2vec'
 
     node2vec_random_walk_sampling = Node2VecRandomWalkSampling(None, data_path, is_directed, **kwargs)
     sampled_graph, walks = node2vec_random_walk_sampling.get_sampled_graph()
