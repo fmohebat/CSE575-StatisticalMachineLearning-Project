@@ -57,6 +57,9 @@ class Node2VecRandomWalkSampling(StaticClassSampling):
 
         self.name = 'node2vec-random-walk'
 
+    def get_description(self):
+        return {'name': self.get_name(), 'p': self.p, 'q': self.q, 'walk_length': self.walk_length, 'edgelist': os.path.basename(self.edge_file), 'num_walks_iter':self.num_walks_iter}
+
     def get_name(self):
         return self.name
 
@@ -305,7 +308,7 @@ def alias_draw(J, q):
 
 
 def run_test():
-    data_path = '../data/youtube-deepwalk/youtube-deepwalk.edgelist'
+    data_path = '../data/karate/karate.edgelist'
     is_directed = False
 
     kwargs = dict()
@@ -317,7 +320,7 @@ def run_test():
     # set the maximum number of sampled walks (if None, the algorithm will sample from the entire graph)
     kwargs['max_sampled_walk'] = None
     kwargs['is_use_python'] = False
-    kwargs['node2vec_c_executable'] = '/home/local/ASUAD/lguan9/Documents/Development/SNAP/snap/executables/node2vec'
+    kwargs['node2vec_c_executable'] = 'node2vec'
 
     node2vec_random_walk_sampling = Node2VecRandomWalkSampling(None, data_path, is_directed, **kwargs)
     sampled_graph, walks = node2vec_random_walk_sampling.get_sampled_graph()

@@ -27,51 +27,51 @@ By utilizing the random sampling method established by node2vec and modifying th
 ## Sampling Strategies
 
 - **Biased Walk**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/sampling/biased_walk.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/sampling/biased_walk.py
     - **citation**: Nguyen, Duong, and Fragkiskos D. Malliaros. "BiasedWalk: Biased Sampling for Representation Learning on Graphs." 2018 IEEE International Conference on Big Data (Big Data). IEEE, 2018.
     - **note**: the implementation is based on the author's [open-source code](https://github.com/duong18/BiasedWalk/tree/master/source)
 
 - **Node2Vec Biased Random Walk**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/sampling/node2vec_random_walk_sampling.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/sampling/node2vec_random_walk_sampling.py
     - **citation**: Grover, Aditya, and Jure Leskovec. "node2vec: Scalable feature learning for networks." Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2016.
     - **note**: the implementation is based on the author's [open-source code](https://github.com/aditya-grover/node2vec)
 
 - **Uniform Simple Random Walk**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/sampling/simple_random_walk_sampling.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/sampling/simple_random_walk_sampling.py
     - **note**: the simple random walk which uniformly chooses the neighbor to visit
 
 - **Approximated BFS Random Walk**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/sampling/bfs_walk_sampling.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/sampling/bfs_walk_sampling.py
     - **note**: the approximated BFS random walk by setting p = 0.25 and q = 4 in node2vec
 
 - **Approximated DFS Random Walk**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/sampling/temperature_random_walk.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/sampling/temperature_random_walk.py
     - **note**: use logistic function to make the random walk gradually switch from BFS to DFS
 
 - **The Combined Random Walk**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/sampling/dfs_walk_sampling.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/sampling/dfs_walk_sampling.py
     - **note**: the approximated BFS random walk by setting p = 4 and q = 0.25 in node2vec
 
 
 ## Word Embedding Methods
 
 - **CBOW**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/embedding/cbow_embedding.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/embedding/cbow_embedding.py
     - **note**: use the word2vec embedding model in gensim
     - **citation**: Rehurek, Radim, and Petr Sojka. "Software framework for topic modelling with large corpora." In Proceedings of the LREC 2010 Workshop on New Challenges for NLP Frameworks. 2010.
 
 - **SkipGram**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/embedding/node2vec_embedding.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/embedding/node2vec_embedding.py
     - **note**: the SkipGram word embedding used in node2vec
     - **citation**: Rehurek, Radim, and Petr Sojka. "Software framework for topic modelling with large corpora." In Proceedings of the LREC 2010 Workshop on New Challenges for NLP Frameworks. 2010.
 
 - **Fast-Text**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/embedding/fast_text_embedding.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/embedding/fast_text_embedding.py
     - **note**: the Fast-Text word embedding in gensim
     - **citation**: Rehurek, Radim, and Petr Sojka. "Software framework for topic modelling with large corpora." In Proceedings of the LREC 2010 Workshop on New Challenges for NLP Frameworks. 2010.
 
 - **Glove**
-    - **implementation**: https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/embedding/glove_embedding.py
+    - **implementation**: https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/embedding/glove_embedding.py
     - **note**: the Glove word embedding in glove_python
     - **source**: https://github.com/maciejkula/glove-python
     - **citation**: Pennington, Jeffrey, Richard Socher, and Christopher Manning. "Glove: Global vectors for word representation." Proceedings of the 2014 conference on empirical methods in natural language processing (EMNLP). 2014.
@@ -84,7 +84,7 @@ All the dataset in the data directory have been parsed into edgelist format, whi
 - **The Flickr dataset**
     - **raw data**: http://leitang.net/social_dimension.html
     - **content**: 80513 nodes, 5899882 links, and 195 categories.
-    - **preprocessor/parser**: [flickr_deepwalk_preprocessor.py](https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/data_preprocessor/flickr_deepwalk_preprocessor.py)
+    - **preprocessor/parser**: [flickr_deepwalk_preprocessor.py](https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/data_preprocessor/flickr_deepwalk_preprocessor.py)
     - **flickr-deepwalk.edgelist**: each line represents an edge in the graph; the format is (node_from, node_to, weight)
     - **flickr-deepwalk-labels.txt**: each line represents a node and the labels it has; the format is (node_id, [list of labels]).
     - **citation**: L. Tang and H. Liu. Relational learning via latent social dimensions. In Proceedings of the 15th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, KDD ’09, pages 817–826, New York, NY, USA, 2009. ACM.
@@ -92,7 +92,7 @@ All the dataset in the data directory have been parsed into edgelist format, whi
 - **The BlogCatalog dataset in DeepWalk**
     - **raw data**: http://leitang.net/social_dimension.html
     - **content**: 10312 nodes, 333983 links, and 39 categories.
-    - **preprocessor/parser**: [blog_catalog_deepwalk_preprocessor.py](https://github.com/GuanSuns/Graph-Embedding-Algorithms/blob/master/data_preprocessor/blog_catalog_deepwalk_preprocessor.py)
+    - **preprocessor/parser**: [blog_catalog_deepwalk_preprocessor.py](https://github.com/fmohebat/CSE575-StatisticalMachineLearning-Project/tree/master/data_preprocessor/blog_catalog_deepwalk_preprocessor.py)
     - **blog-catalog.edgelist**: each line represents an edge in the graph; the format is (node_from, node_to, weight)
     - **blog-catalog-labels.txt**: each line represents a node and the labels it has; the format is (node_id, [list of labels]).
     - **citation**: L. Tang and H. Liu. Relational learning via latent social dimensions. In Proceedings of the 15th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, KDD ’09, pages 817–826, New York, NY, USA, 2009. ACM.    

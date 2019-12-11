@@ -6,13 +6,14 @@
 import networkx as nx
 import numpy as np
 import random
+import math
 import sys
 import os
 from sampling.static_graph_sampling import StaticClassSampling
 
 
 # noinspection PyMissingConstructor
-class SimpleRandomWalkSampling(StaticClassSampling):
+class TemperatureRandomWalkSampling(StaticClassSampling):
 
     def __init__(self, G, edge_file, is_direct, **kwargs):
         """
@@ -34,10 +35,16 @@ class SimpleRandomWalkSampling(StaticClassSampling):
         self.max_sampled_walk = kwargs['max_sampled_walk']
         self.walk_length = kwargs['walk_length']
 
-        self.name = 'simple-random-walk'
+        # parameter related to the logistic function: n(t) = L/(1+ math.exp(-k*(t-t0)))
+        self.t0 = kwargs['t0']      # default: walk_length/2=40
+        self.L = kwargs['L']
+        self.k = kwargs['k']    # default: 0.1
+        self.p = kwargs['p']
+
+        self.name = 'temperature-random-walk'
 
     def get_description(self):
-        return {'name': self.get_name(), 'walk_length': self.walk_length, 'num_walks_iter': self.num_walks_iter}
+        return {'name': self.get_name(), 'L': self.L, 'k': self.k, 'p': self.p, 'walk_length': self.walk_length, 'num_walks_iter': self.num_walks_iter}
 
     def get_name(self):
         return self.name
@@ -79,7 +86,7 @@ class SimpleRandomWalkSampling(StaticClassSampling):
                 for i in range(1, len(sampled_walk)):
                     current_node = sampled_walk[i]
                     if current_node != previous_node:
-                        sampled_graph.add_edge(previous_node, current_node, weight=self.get_edge_weight(previous_node, current_node))
+                        sampled_graph.add_edge(previous_node, current_node)
                     # update previous node
                     previous_node = current_node
                 # count sampled walk
@@ -100,58 +107,52 @@ class SimpleRandomWalkSampling(StaticClassSampling):
         Simulate a random walk starting from start node.
         """
         G = self.G
+        L = self.L
+        k = self.k
+        t0 = self.t0
+        init_p = self.p
 
         walk = [start_node]
-
+        t = 0
         while len(walk) < walk_length:
             cur = walk[-1]
-            cur_nbrs = sorted(G.neighbors(cur))
-            if len(cur_nbrs) > 0:
-                transition_probs = self.get_transition_prob(cur, cur_nbrs)
-                next_node = np.random.choice(cur_nbrs, p=transition_probs)
-                walk.append(next_node)
-            else:
-                break
+            cur_nbrs = list(G.neighbors(cur))
 
+            if len(walk) == 1:
+                next_node = np.random.choice(cur_nbrs)
+                walk.append(next_node)
+                continue
+
+            cur_nbrs.append(cur)
+            pre_node = walk[-2]
+            pre_neighbors = list(G.neighbors(pre_node))
+            probs = TemperatureRandomWalkSampling.get_transition_probs(pre_neighbors, pre_node, cur_nbrs, L, k, t0, t, init_p)
+            probs = probs/np.sum(probs)
+            next_node = np.random.choice(cur_nbrs, p=probs)
+            walk.append(next_node)
+            t += 1
         return walk
 
-    def get_transition_prob(self, cur_node, neighbors):
-        sum_weights = 0
-        probs = np.zeros(shape=(len(neighbors), ))
+    @staticmethod
+    def get_transition_probs(pre_neighbors, pre_node, candidate, L, k, t0, t, init_p):
+        current_p = TemperatureRandomWalkSampling.get_logistic_value(L, k, t0, t, init_p)
+        probs = np.zeros(shape=(len(candidate), ))
+        for i, node in enumerate(candidate):
+            if node == pre_node:
+                probs[i] = 1/current_p
+            elif node in pre_neighbors:
+                probs[i] = 1
+            else:
+                probs[i] = current_p
+        return probs
 
-        for i, nbr in enumerate(neighbors):
-            nbr_weight = self.get_edge_weight(cur_node, nbr)
-            sum_weights += nbr_weight
-            probs[i] = nbr_weight
-        return probs/sum_weights
-
-    def get_edge_weight(self, node, nbr):
-        G = self.G
-        if 'weight' in G[node][nbr]:
-            return G[node][nbr]['weight']
-        else:
-            return 1.0
+    @staticmethod
+    def get_logistic_value(L, k, t0, t, init_p):
+        return min(L/(1 + math.exp(- k * (t - t0))) + init_p, 1/init_p)
 
 
 def run_test():
-    data_path = '../data/karate/karate.edgelist'
-    is_directed = False
-
-    kwargs = dict()
-    kwargs['walk_length'] = 15
-    # the default algorithm samples num_walks_iter walks starting for each node
-    kwargs['num_walks_iter'] = 10
-    # set the maximum number of sampled walks (if None, the algorithm will sample from the entire graph)
-    kwargs['max_sampled_walk'] = None
-
-    simple_random_walk_sampling = SimpleRandomWalkSampling(None, data_path, is_directed, **kwargs)
-    sampled_graph, walks = simple_random_walk_sampling.get_sampled_graph()
-    print('number of nodes in the sampled graph: ', sampled_graph.number_of_nodes())
-    print('number of edges in the sampled graph: ', sampled_graph.number_of_edges())
-    print('number of walks: ', len(walks))
-    print('walk length: ', len(walks[0]))
-
-    return sampled_graph, walks
+    pass
 
 
 if __name__ == '__main__':
