@@ -17,7 +17,8 @@ By utilizing the random sampling method established by node2vec and modifying th
     - File: **run\_evaluation.py**
     - Results: the results will be saved in the evaluation\_results.csv file
     - In the **run\_evaluation** function, set the embedding files to be used
-    - In the **run\_classification\_experiment** function, set the multi-label classifiers to be used
+    - In the **run\_classification\_experiment** function in the **automate\_classification\_exp** branch, set the multi-label classifiers to be used
+    - Note: the **parse** function in the **automate\_classification\_exp** branch can help create the graphs shown in our paper.
     
 - **Notes**
     - All the modules are compatible with the GEM library
